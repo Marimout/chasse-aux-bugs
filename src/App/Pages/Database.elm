@@ -1,8 +1,8 @@
 module App.Pages.Database exposing (databaseView)
 
-import App.Messages exposing (Msg, Msg(ChangePage))
+import App.Messages exposing (Msg(ChangePage))
 import App.Model exposing (Model, Page(Overview))
-import Html exposing (Html, div, h1, img, text, button)
+import Html exposing (Html, button, div, h1, img, text)
 import Html.Attributes exposing (src)
 import Html.Events exposing (onClick)
 

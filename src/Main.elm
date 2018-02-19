@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import App.Messages exposing (Msg)
-import App.Model exposing (Model, BlocklyData, Level, Page(..))
+import App.Model exposing (BlocklyData, Level, Model, Page(..))
 import App.Subscriptions exposing (subscriptions)
 import App.Update exposing (update)
 import App.View exposing (view)
@@ -26,10 +26,10 @@ init =
 
         outputBlockly =
             BlocklyData "" "" ""
-        
+
         level =
             Level 1 (List.singleton "") ""
-            
+
         page =
             Login
 

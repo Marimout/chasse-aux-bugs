@@ -1,4 +1,4 @@
-module App.Model exposing (Model, Page(..), BlocklyData, Level)
+module App.Model exposing (BlocklyData, Level, Model, Page(..))
 
 
 type alias Model =
@@ -27,8 +27,8 @@ type alias BlocklyData =
     , workspace : String
     , script : String
     }
-    
-    
+
+
 type alias Level =
     { number : Int
     , testInputs : List String

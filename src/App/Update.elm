@@ -9,5 +9,6 @@ update msg model =
     case msg of
         ChangePage newPage ->
             ( { model | page = newPage }, Cmd.none )
+
         _ ->
             ( model, Cmd.none )

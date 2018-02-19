@@ -1,8 +1,8 @@
 module App.Pages.Process exposing (processView)
 
-import App.Messages exposing (Msg, Msg(ChangePage))
-import App.Model exposing (Model, BlocklyData, Page(Overview))
-import Html exposing (Html, div, h1, img, text, button, p)
+import App.Messages exposing (Msg(ChangePage))
+import App.Model exposing (BlocklyData, Model, Page(Overview))
+import Html exposing (Html, button, div, h1, img, p, text)
 import Html.Attributes exposing (src)
 import Html.Events exposing (onClick)
 
