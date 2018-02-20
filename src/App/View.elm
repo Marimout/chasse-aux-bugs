@@ -21,7 +21,7 @@ pageBody : Model -> Html Msg
 pageBody model =
     case model.page of
         Login ->
-            loginView
+            loginView (String.length model.team)
 
         Overview ->
             overviewView model
