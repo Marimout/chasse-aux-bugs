@@ -1,6 +1,6 @@
 module Main exposing (main)
 
-import App.Messages exposing (Msg)
+import App.Messages exposing (Msg, Msg(LevelUp))
 import App.Model exposing (BlocklyData, Level, Model, Page(..))
 import App.Subscriptions exposing (subscriptions)
 import App.Update exposing (update)
@@ -27,20 +27,19 @@ init =
         outputBlockly =
             BlocklyData "" "" ""
 
-        level =
-            Level 1 (List.singleton "") ""
-
         page =
             Login
 
         model =
             { team = ""
-            , level = level
+            , lvlNb = 0
+            , level = Nothing
             , page = page
             , inputBlockly = inputBlockly
             , outputBlockly = outputBlockly
-            , inputRows = List.singleton ""
             , outputRows = List.singleton ""
+            , errorMessage = ""
             }
     in
-    ( model, Cmd.none )
+        update LevelUp model
+    -- ( model, Cmd.map (always LevelUp) Cmd.none )
