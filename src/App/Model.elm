@@ -1,13 +1,14 @@
-module App.Model exposing (Model, BlocklyData, Level, LevelInfosJson, Page(..))
+module App.Model exposing (BlocklyData, LevelInfos, Model, Page(..))
 
 import Csv exposing (Csv)
 
 
 type alias Model =
     { team : String
-    , lvlNb : Int 
-    , level : Maybe Level
     , page : Page
+    , lvlNb : Int
+    , level : Maybe LevelInfos
+    , inputGlobalSheet : Maybe Csv
     , inputBlockly : BlocklyData
     , outputBlockly : BlocklyData
     , outputRows : List String
@@ -32,16 +33,11 @@ type alias BlocklyData =
     }
 
 
-type alias Level =
-    { inputSheets : List Csv
-    , expectedOutput : String
-    , texts : List String
-    }
-
-
-type alias LevelInfosJson =
+type alias LevelInfos =
     { version : String
     , number : Int
     , availableTools : List String
     , inputRowsBySheet : List Int
+    , expectedOutput : String
+    , texts : List String
     }

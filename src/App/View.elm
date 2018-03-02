@@ -16,7 +16,8 @@ import Utils exposing (viewIf)
 view : Model -> Html Msg
 view model =
     div []
-        [ viewIf (not <| String.isEmpty model.errorMessage) (h3 [class "ui block red header"][text model.errorMessage])
+        [ viewIf (not <| String.isEmpty model.errorMessage)
+            (h3 [ class "ui block red header" ] [ text model.errorMessage ])
         , pageBody model
         ]
 

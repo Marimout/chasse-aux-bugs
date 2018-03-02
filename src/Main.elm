@@ -1,7 +1,7 @@
 module Main exposing (main)
 
-import App.Messages exposing (Msg, Msg(LevelUp))
-import App.Model exposing (BlocklyData, Level, Model, Page(..))
+import App.Messages exposing (Msg(LevelUp))
+import App.Model exposing (BlocklyData, Model, Page(..))
 import App.Subscriptions exposing (subscriptions)
 import App.Update exposing (update)
 import App.View exposing (view)
@@ -34,6 +34,7 @@ init =
             { team = ""
             , lvlNb = 0
             , level = Nothing
+            , inputGlobalSheet = Nothing
             , page = page
             , inputBlockly = inputBlockly
             , outputBlockly = outputBlockly
@@ -41,5 +42,4 @@ init =
             , errorMessage = ""
             }
     in
-        update LevelUp model
-    -- ( model, Cmd.map (always LevelUp) Cmd.none )
+    update LevelUp model

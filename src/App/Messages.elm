@@ -1,7 +1,7 @@
 module App.Messages exposing (Msg(..))
 
+import App.Model exposing (LevelInfos, Page)
 import Http exposing (..)
-import App.Model exposing (Page, LevelInfosJson)
 
 
 type Msg
@@ -9,5 +9,5 @@ type Msg
     | TeamName String
     | ChangePage Page
     | LevelUp
-    | LevelInfosResult (Result Http.Error LevelInfosJson)
+    | LevelInfosResult (Result Http.Error LevelInfos)
     | InputCsvResult (Result Http.Error String)
