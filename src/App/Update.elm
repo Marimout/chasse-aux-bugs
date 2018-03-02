@@ -23,8 +23,6 @@ update msg model =
             let
                 newLvlNb = model.lvlNb + 1
                 
-                --newLevelInfos = getLevelInfos newLvlNb
-                
                 --newLevel =
                 --    { inputSheets = loadInputSheets
                 --    , expectedOutput = ""
@@ -38,22 +36,26 @@ update msg model =
                 | lvlNb = newLvlNb
                 }, cmd )
         
-        LevelInfosResult (Ok lvlInfos) ->
-            let
-                cmd =
-                    Http.send InputCsvResult <|
-                        Http.getString ( (getLevelDir lvlInfos.number) ++ "/input.csv" )
-            in
-                ( model, cmd )
-        
-        LevelInfosResult (Err err) ->
-            ( { model | errorMessage = toString err }, Cmd.none ) -- TODO
-        
-        InputCsvResult (Ok inputCsv) ->
-            ( model, Cmd.none ) -- TODO
-        
-        InputCsvResult (Err err) ->
-            ( model, Cmd.none ) -- TODO
+        LevelInfosResult result ->
+            case result of
+                Ok lvlInfos ->
+                    let
+                        cmd =
+                            Http.send InputCsvResult <|
+                                Http.getString ( (getLevelDir lvlInfos.number) ++ "/input.csv" )
+                    in
+                        ( model, cmd )
+                        
+                Err error ->
+                    ( { model | errorMessage = toString error }, Cmd.none )
+            
+        InputCsvResult result ->
+            case result of
+                Ok inputCsv ->
+                    ( model, Cmd.none ) -- TODO
+                    
+                Err error ->
+                    ( model, Cmd.none ) -- TODO
 
 
 getLevelDir : Int -> String
@@ -61,9 +63,9 @@ getLevelDir lvlNb =
     "./levels/" ++ (toString lvlNb) ++ "/"
 
 
---getLevelInfos : Int -> Http.Request LevelInfos
---getLevelInfos lvlNb =
---  Http.get ( (getLevelDir lvlNb) ++ "/infos.json" ) decodeLevelInfos
+-- getLevelInfos : Int -> Http.Request LevelInfosJson
+-- getLevelInfos lvlNb =
+--  Http.get ( (getLevelDir lvlNb) ++ "/infos.json" ) decodeLevelInfosJson
 
 
 decodeLevelInfosJson : Decoder LevelInfosJson

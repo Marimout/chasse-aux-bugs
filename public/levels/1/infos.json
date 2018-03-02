@@ -1,5 +1,5 @@
 {
-    "version": 1.0.0,
+    "version": "1.0.0",
     "number": 1,
     "availableTools": ["DATABASE", "INPUT_FORM", "INPUT_PROCESS", "OUTPUT", "OUTPUT_PROCESS"],
     "inputRowsBySheet": [1, 2]
