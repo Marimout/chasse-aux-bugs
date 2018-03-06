@@ -9,7 +9,7 @@ import Html.Events exposing (onClick)
 databaseView : Model -> Html Msg
 databaseView model =
     div []
-        [ img [ src "/logo.svg" ] []
+        [ img [ src "logo.svg" ] []
         , h1 [] [ text "Database Page" ]
         , table []
                 (List.append tableHeader (tableContent model))

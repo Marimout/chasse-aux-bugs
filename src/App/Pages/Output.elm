@@ -10,7 +10,7 @@ import Html.Events exposing (onClick)
 outputView : Model -> Html Msg
 outputView model =
     div []
-        [ img [ src "/logo.svg" ] []
+        [ img [ src "logo.svg" ] []
         , h1 [] [ text "Output Page" ]
         , button [ onClick (ChangePage Overview) ] [ text "go to Overview" ]
         ]

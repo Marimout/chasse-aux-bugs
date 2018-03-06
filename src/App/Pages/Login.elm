@@ -11,7 +11,7 @@ import Utils exposing (viewIf)
 loginView : Int -> Html Msg
 loginView teamNameLength =
     div []
-        [ img [ src "/logo.svg" ] []
+        [ img [ src "logo.svg" ] []
         , h1 [] [ text "La chasse aux bugs !" ]
         , form
             [ onSubmit

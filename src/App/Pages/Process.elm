@@ -10,7 +10,7 @@ import Html.Events exposing (onClick)
 processView : Model -> BlocklyData -> Html Msg
 processView model blocklyData =
     div []
-        [ img [ src "/logo.svg" ] []
+        [ img [ src "logo.svg" ] []
         , h1 [] [ text "Process Page" ]
         , p [] [ text ("Toolbox: " ++ blocklyData.toolbox) ]
         , p [] [ text ("Workspace: " ++ blocklyData.workspace) ]

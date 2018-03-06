@@ -10,7 +10,7 @@ import Html.Events exposing (onClick)
 inputFormView : Model -> Html Msg
 inputFormView model =
     div []
-        [ img [ src "/logo.svg" ] []
+        [ img [ src "logo.svg" ] []
         , h1 [] [ text "Input form Page" ]
         , button [ onClick (ChangePage Overview) ] [ text "go to Overview" ]
         ]

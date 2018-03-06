@@ -8,6 +8,7 @@ import Html.Events exposing (onClick)
 
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Row as Row
+import Bootstrap.Grid.Col as Col
 import Bootstrap.Card as Card
 import Bootstrap.Card.Block as Block
 import Bootstrap.Button as Button
@@ -16,10 +17,10 @@ import Bootstrap.Utilities.Spacing as Spacing
 overviewView : Model -> Html Msg
 overviewView model =
     div []
-        [ img [ src "/logo.svg" ] []
+        [ img [ src "logo.svg" ] []
         , h1 [] [ text "BUGS BUSTER" ]
         , Grid.container [ ]
-            [ Grid.row [ Row.attrs [ Spacing.my3 ] ]
+            [ Grid.row [ Row.attrs [ Spacing.my5 ] ]
                 [ Grid.col []
                     [ Card.config [ Card.outlinePrimary ]
                         |> Card.headerH4 [] [ text "Données entrées" ]
@@ -45,10 +46,10 @@ overviewView model =
                         |> Card.view
                     ]
                 ]
-            , Grid.row [ Row.attrs [ Spacing.my3 ] ]
-                [ Grid.col []
+            , Grid.row [ Row.attrs [ Spacing.my5 ] ]
+                [ Grid.col [ Col.middleMd ]
                     [ Card.config [ Card.outlinePrimary ]
-                        |> Card.headerH4 [] [ text "FIN" ]
+                        |> Card.headerH4 [] [ Html.i [ class "fa fa-thumbs-o-up", style [ ("font-size", "24px")]][] ]
                         |> Card.block []
                             [ Block.text [] [ text "T'es arrivé au bout du process ! Bravo !" ]
                             ]
@@ -56,18 +57,14 @@ overviewView model =
                     ]
                 , Grid.col []
                     [ Card.config [ Card.outlinePrimary ]
-                        |> Card.headerH4 [] [ text "Gestion de base de données" ]
                         |> Card.block []
-                            [ Block.text [] [ text "Cliquez sur le bouton pour accéder au module de gestion de base de données" ]
-                            , Block.custom <|
-                                Button.linkButton
-                                    [ Button.primary, Button.attrs [ onClick (ChangePage Database) ] ]
-                                    [ text "Start" ]
+                            [ Block.custom <|
+                                Html.i [ class "fa fa-database", style [ ("font-size", "60px") ], onClick (ChangePage Database)] []
                             ]
                         |> Card.view
                     ]
                 ]
-            , Grid.row [ Row.attrs [ Spacing.my3 ] ]
+            , Grid.row [ Row.attrs [ Spacing.my5 ] ]
                 [ Grid.col []
                     [ Card.config [ Card.outlinePrimary ]
                         |> Card.headerH4 [] [ text "La sortie" ]
