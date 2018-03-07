@@ -1,7 +1,7 @@
 module App.Update exposing (update)
 
 import App.Messages exposing (Msg(..))
-import App.Model exposing (LevelInfos, Model)
+import App.Model exposing (LevelInfos, Model, Record)
 import Csv
 import Http exposing (..)
 import Json.Decode as Decode exposing (Decoder, field)
@@ -21,6 +21,18 @@ update msg model =
 
         ChangeInputSet newInputSet ->
             ( { model | currentInputSet = newInputSet }, Cmd.none )
+
+        LoadData newData ->
+            let 
+                t = Decode.decodeValue (Decode.list decodeRecord) newData
+            in
+            (
+                case t of
+                    Ok record ->
+                        ( { model | data = Just record }, Cmd.none )
+                    Err error ->
+                        ( { model | data = Nothing }, Cmd.none )
+            )
 
         LevelUp ->
             let
@@ -73,3 +85,12 @@ decodeLevelInfos =
         (field "inputRowsBySheet" (Decode.list Decode.int))
         (field "expectedOutput" Decode.string)
         (field "texts" (Decode.list Decode.string))
+
+decodeRecord : Decoder Record
+decodeRecord =
+    Decode.map5 Record
+        (field "id" Decode.int)
+        (field "date" Decode.string)
+        (field "libelle" (Decode.string))
+        (field "montant" (Decode.string))
+        (field "devise" Decode.string)

@@ -1,4 +1,4 @@
-module App.Model exposing (BlocklyData, LevelInfos, Model, Page(..))
+module App.Model exposing (BlocklyData, LevelInfos, Model, Record, Page(..))
 
 import Csv exposing (Csv)
 
@@ -14,6 +14,7 @@ type alias Model =
     , outputBlockly : BlocklyData
     , outputRows : List String
     , errorMessage : String
+    , data : Maybe (List Record)
     }
 
 
@@ -41,4 +42,12 @@ type alias LevelInfos =
     , inputRowsBySheet : List Int
     , expectedOutput : String
     , texts : List String
+    }
+
+type alias Record = 
+    { id : Int
+    , date : String
+    , libelle : String
+    , montant : String
+    , devise : String
     }

@@ -1,4 +1,4 @@
-module Main exposing (main)
+port module Main exposing (..)
 
 import App.Messages exposing (Msg(LevelUp))
 import App.Model exposing (BlocklyData, Model, Page(..))
@@ -41,6 +41,7 @@ init =
             , outputBlockly = outputBlockly
             , outputRows = List.singleton ""
             , errorMessage = ""
+            , data = Nothing
             }
     in
     update LevelUp model
