@@ -7,6 +7,7 @@ type alias Model =
     { team : String
     , page : Page
     , lvlNb : Int
+    , currentInputSet : Int
     , level : Maybe LevelInfos
     , inputGlobalSheet : Maybe Csv
     , inputBlockly : BlocklyData

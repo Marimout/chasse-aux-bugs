@@ -34,6 +34,7 @@ init =
             { team = ""
             , lvlNb = 0
             , level = Nothing
+            , currentInputSet = 0
             , inputGlobalSheet = Nothing
             , page = page
             , inputBlockly = inputBlockly

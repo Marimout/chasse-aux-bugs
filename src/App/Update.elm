@@ -19,6 +19,9 @@ update msg model =
         ChangePage newPage ->
             ( { model | page = newPage }, Cmd.none )
 
+        ChangeInputSet newInputSet ->
+            ( { model | currentInputSet = newInputSet }, Cmd.none )
+
         LevelUp ->
             let
                 newLvlNb =

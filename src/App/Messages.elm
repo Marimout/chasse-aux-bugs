@@ -8,6 +8,7 @@ type Msg
     = NoOp
     | TeamName String
     | ChangePage Page
+    | ChangeInputSet Int
     | LevelUp
     | LevelInfosResult (Result Http.Error LevelInfos)
     | InputCsvResult (Result Http.Error String)
