@@ -10,17 +10,22 @@ import Utils exposing (viewIf)
 
 loginView : Int -> Html Msg
 loginView teamNameLength =
-    div []
-        [ img [ src "logo.svg", class "ui small image" ] []
+    div [ class "ui center aligned segment" ]
+        [ img [ src "logo.jpg", class "ui centered big image" ] []
         , Html.form
-            [ onSubmit
+            [ class "ui form"
+            , onSubmit
                 (if teamNameLength > 2 then
                     ChangePage Overview
                  else
                     NoOp
                 )
             ]
-            [ input [ type_ "text", placeholder "Nom d'équipe", onInput TeamName ] []
-            , viewIf (teamNameLength > 2) (input [ type_ "submit", value "valider" ] [])
+            [ br [] []
+            , div [ class "inline field" ]
+                [ label [] [ text "Nom d'équipe" ]
+                , input [ type_ "text", placeholder "Nom d'équipe", onInput TeamName ] []
+                ]
+            , viewIf (teamNameLength > 2) (input [ class "ui button", type_ "submit", value "valider" ] [])
             ]
         ]
