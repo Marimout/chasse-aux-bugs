@@ -6,88 +6,69 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 
-import Bootstrap.Grid as Grid
-import Bootstrap.Grid.Row as Row
-import Bootstrap.Grid.Col as Col
-import Bootstrap.Card as Card
-import Bootstrap.Card.Block as Block
-import Bootstrap.Button as Button
-import Bootstrap.Utilities.Spacing as Spacing
 
 overviewView : Model -> Html Msg
 overviewView model =
     div []
-        [ img [ src "logo.svg" ] []
-        , h1 [] [ text "BUGS BUSTER" ]
-        , Grid.container [ ]
-            [ Grid.row [ Row.attrs [ Spacing.my5 ] ]
-                [ Grid.col []
-                    [ Card.config [ Card.outlinePrimary ]
-                        |> Card.headerH4 [] [ text "Données entrées" ]
-                        |> Card.block []
-                            [ Block.text [] [ text "Les mouvements bancaires sont affichés ici" ]
-                            , Block.custom <|
-                                Button.linkButton
-                                    [ Button.primary, Button.attrs [ onClick (ChangePage InputForm) ] ]
-                                    [ text "Start" ]
-                            ]
-                        |> Card.view
-                    ]
-                , Grid.col []
-                    [ Card.config [ Card.outlinePrimary ]
-                        |> Card.headerH4 [] [ text "Programme de traitement des données d'entrée" ]
-                        |> Card.block []
-                            [ Block.text [] [ text "Le programme Blockly pour traiter les données d'entrée est affiché ici" ]
-                            , Block.custom <|
-                                Button.linkButton
-                                    [ Button.primary, Button.attrs [ onClick (ChangePage InputProcess) ] ]
-                                    [ text "Start" ]
-                            ]
-                        |> Card.view
+        [ div [ class "ui grid" ]
+            [ div [ class "eight wide column" ]
+                [ div [ class "ui card centered" ]
+                    [ div [ class "content" ]
+                        [ div [ class "header" ] [ text "Données en entrées" ]
+                        , div [ class "description" ] [ text "Les mouvements bancaires sont affichés ici" ]
+                        ]
+                    , div [ class "ui bottom attached button", onClick (ChangePage InputForm) ]
+                        [ i [ class "file icon" ] []
+                        , text "Go"
+                        ]
                     ]
                 ]
-            , Grid.row [ Row.attrs [ Spacing.my5 ] ]
-                [ Grid.col [ Col.middleMd ]
-                    [ Card.config [ Card.outlinePrimary ]
-                        |> Card.headerH4 [] [ Html.i [ class "fa fa-thumbs-o-up", style [ ("font-size", "24px")]][] ]
-                        |> Card.block []
-                            [ Block.text [] [ text "T'es arrivé au bout du process ! Bravo !" ]
-                            ]
-                        |> Card.view
-                    ]
-                , Grid.col []
-                    [ Card.config [ Card.outlinePrimary ]
-                        |> Card.block []
-                            [ Block.custom <|
-                                Html.i [ class "fa fa-database", style [ ("font-size", "60px") ], onClick (ChangePage Database)] []
-                            ]
-                        |> Card.view
+            , div [ class "eight wide column" ]
+                [ div [ class "ui card centered" ]
+                    [ div [ class "content" ]
+                        [ div [ class "header" ] [ text "Programme de traitement des données d'entrée" ]
+                        , div [ class "description" ] [ text "Le programme Blockly pour traiter les données d'entrée est affiché ici" ]
+                        ]
+                    , div [ class "ui bottom attached button", onClick (ChangePage InputProcess) ]
+                        [ i [ class "code icon" ] []
+                        , text "Go"
+                        ]
                     ]
                 ]
-            , Grid.row [ Row.attrs [ Spacing.my5 ] ]
-                [ Grid.col []
-                    [ Card.config [ Card.outlinePrimary ]
-                        |> Card.headerH4 [] [ text "La sortie" ]
-                        |> Card.block []
-                            [ Block.text [] [ text "Le relevé de compte s'affiche ici" ]
-                            , Block.custom <|
-                                Button.linkButton
-                                    [ Button.primary, Button.attrs [ onClick (ChangePage Output) ] ]
-                                    [ text "Start" ]
-                            ]
-                        |> Card.view
+            , div [ class "sixteen wide column" ]
+                [ div [ class "ui card centered" ]
+                    [ div [ class "content" ]
+                        [ div [ class "header" ] [ text "La base de données" ]
+                        , div [ class "description" ] [ text "L'espace ou sont stocké toutes les données de l'application" ]
+                        ]
+                    , div [ class "ui bottom attached button", onClick (ChangePage Database) ]
+                        [ i [ class "archive icon" ] []
+                        , text "Go"
+                        ]
                     ]
-                , Grid.col []
-                    [ Card.config [ Card.outlinePrimary ]
-                        |> Card.headerH4 [] [ text "Programme de génération de relevé" ]
-                        |> Card.block []
-                            [ Block.text [] [ text "Le programme Blockly pour générer le relevé est affiché ici" ]
-                            , Block.custom <|
-                                Button.linkButton
-                                    [ Button.primary, Button.attrs [ onClick (ChangePage OutputProcess) ] ]
-                                    [ text "Start" ]
-                            ]
-                        |> Card.view
+                ]
+            , div [ class "eight wide column" ]
+                [ div [ class "ui card centered" ]
+                    [ div [ class "content" ]
+                        [ div [ class "header" ] [ text "Programme de génération de relevé" ]
+                        , div [ class "description" ] [ text "Le programme Blockly pour générer le relevé est affiché ici" ]
+                        ]
+                    , div [ class "ui bottom attached button", onClick (ChangePage OutputProcess) ]
+                        [ i [ class "code icon" ] []
+                        , text "Go"
+                        ]
+                    ]
+                ]
+            , div [ class "eight wide column" ]
+                [ div [ class "ui card centered" ]
+                    [ div [ class "content" ]
+                        [ div [ class "header" ] [ text "La sortie" ]
+                        , div [ class "description" ] [ text "Le relevé de compte s'affiche ici" ]
+                        ]
+                    , div [ class "ui bottom attached button", onClick (ChangePage Output) ]
+                        [ i [ class "file icon" ] []
+                        , text "Go"
+                        ]
                     ]
                 ]
             ]
