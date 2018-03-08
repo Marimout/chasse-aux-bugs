@@ -1,5 +1,6 @@
-module Utils exposing ((=>), pair, viewIf)
+module Utils exposing ((=>), defaultCsv, pair, viewIf)
 
+import Csv exposing (Csv)
 import Html exposing (Html)
 
 
@@ -19,3 +20,8 @@ viewIf condition content =
         content
     else
         Html.text ""
+
+
+defaultCsv : Csv
+defaultCsv =
+    { headers = [], records = [] }

@@ -13,8 +13,8 @@ inputFormView model =
     case model.level of
         Just level ->
             div [ class "ui grid" ]
-                [ div [ class "four wide column" ] [ getInputsMenu model.currentInputSet <| List.length level.inputRowsBySheet - 1 ]
-                , div [ class "twelve wide stretched column" ] [ getInputTable model.currentInputSet level.inputRowsBySheet model.inputGlobalSheet ]
+                [ div [ class "four wide column" ] [ getInputsMenu model.currentInputSet.number <| List.length level.inputRowsBySheet - 1 ]
+                , div [ class "twelve wide stretched column" ] [ getInputTable model.currentInputSet.number level.inputRowsBySheet model.inputGlobalSheet ]
                 ]
 
         Nothing ->
@@ -40,26 +40,25 @@ getInputsMenu currentSet setsNb =
         |> div [ class "ui vertical fluid pointing menu" ]
 
 
-getInputTable : Int -> List Int -> Maybe Csv -> Html Msg
-getInputTable currentSet rowsBySheet globalSheet =
-    case globalSheet of
-        Just sheet ->
-            table [ class "ui celled table" ]
-                [ thead []
-                    [ List.map (\h -> th [] [ text h ]) sheet.headers
-                        |> tr []
-                    ]
-                , tbody []
-                    (sheet.records
-                        |> List.drop (List.sum <| List.take currentSet rowsBySheet)
-                        |> List.take (Maybe.withDefault 0 <| List.head <| List.drop currentSet rowsBySheet)
-                        |> List.map
-                            (\r ->
-                                List.map (\v -> td [] [ text v ]) r
-                                    |> tr []
-                            )
-                    )
-                ]
 
-        Nothing ->
-            text ""
+-- TODO: refactor!
+
+
+getInputTable : Int -> List Int -> Csv -> Html Msg
+getInputTable currentSet rowsBySheet globalSheet =
+    table [ class "ui celled table" ]
+        [ thead []
+            [ List.map (\h -> th [] [ text h ]) globalSheet.headers
+                |> tr []
+            ]
+        , tbody []
+            (globalSheet.records
+                |> List.drop (List.sum <| List.take currentSet rowsBySheet)
+                |> List.take (Maybe.withDefault 0 <| List.head <| List.drop currentSet rowsBySheet)
+                |> List.map
+                    (\r ->
+                        List.map (\v -> td [] [ text v ]) r
+                            |> tr []
+                    )
+            )
+        ]

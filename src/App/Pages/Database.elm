@@ -1,22 +1,23 @@
 module App.Pages.Database exposing (databaseView)
 
 import App.Messages exposing (Msg(ChangePage))
-import App.Model exposing (Model, Record, Page(Overview))
+import App.Model exposing (Model, Page(Overview), Record)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
+
 databaseView : Model -> Html Msg
 databaseView model =
-    div [ ]
+    div []
         [ h2 [ class "ui center aligned header" ] [ text "Database Page" ]
-        , div [ class "ui segment grid" ] 
-            [ div [ class "sixteen wide column" ] 
-                [ table [ class "ui celled table" ] (tableHeader :: (tableContentFromDatabase model)) 
+        , div [ class "ui segment grid" ]
+            [ div [ class "sixteen wide column" ]
+                [ table [ class "ui celled table" ] (tableHeader :: tableContentFromDatabase model)
                 ]
             , div [ class "sixteen wide column" ]
                 [ div [ class "ui form" ]
                     [ div [ class "field" ]
-                        [ label [] [ text "Query"]
+                        [ label [] [ text "Query" ]
                         , textarea [] []
                         ]
                     ]
@@ -30,8 +31,7 @@ databaseView model =
 tableHeader : Html Msg
 tableHeader =
     thead []
-        [
-            tr []
+        [ tr []
             [ th [] [ text "N°" ]
             , th [] [ text "Date" ]
             , th [] [ text "Libellé" ]
@@ -40,35 +40,34 @@ tableHeader =
             ]
         ]
 
+
 tableContentFromDatabase : Model -> List (Html Msg)
-tableContentFromDatabase model = 
+tableContentFromDatabase model =
     case model.data of
         Nothing ->
             []
+
         Just data ->
             data
                 |> List.map tableItemFromDatabase
                 |> List.map (tr [])
 
+
 tableItemFromDatabase : Record -> List (Html Msg)
 tableItemFromDatabase record =
-    [ td [][ text (toString record.id) ]
-    , td [][ text record.date ]
-    , td [][ text record.libelle ]
-    , td [][ text record.montant ]
-    , td [][ text record.devise ]
+    [ td [] [ text (toString record.id) ]
+    , td [] [ text record.date ]
+    , td [] [ text record.libelle ]
+    , td [] [ text record.montant ]
+    , td [] [ text record.devise ]
     ]
+
 
 tableContent : Model -> List (Html Msg)
 tableContent model =
-    case model.inputGlobalSheet of
-        Nothing ->
-            []
-
-        Just inputGlobalSheet ->
-            inputGlobalSheet.records
-                |> List.map tableItem
-                |> List.map (tr [])
+    model.inputGlobalSheet.records
+        |> List.map tableItem
+        |> List.map (tr [])
 
 
 tableItem : List String -> List (Html Msg)
