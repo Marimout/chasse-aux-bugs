@@ -15,8 +15,14 @@ processView model blocklyData =
             [ div [ class "column" ]
                 [ div [ class "ui segment" ] [ getBlocklyWorkspace blocklyData ] ]
             , div [ class "column" ]
-                [ div [ class "ui segment" ] [ getInputTable model.currentInputSet.inputCsv ]
-                , div [ class "ui segment" ] [ getOutputTable ]
+                [ div [ class "ui green segment" ]
+                    [ h3 [ class "ui header" ] [ text "données en entrée" ]
+                    , getInputTable model.currentInputSet.inputCsv
+                    ]
+                , div [ class "ui yellow segment" ]
+                    [ h3 [ class "ui header" ] [ text "résultat du traitement" ]
+                    , getResultTable model.currentInputSet.resultCsv
+                    ]
                 ]
             ]
         ]
@@ -29,9 +35,35 @@ getBlocklyWorkspace data =
 
 getInputTable : Csv -> Html Msg
 getInputTable inputCsv =
-    text "Input Table"
+    table [ class "ui selectable celled table" ]
+        [ thead []
+            [ List.map (\h -> th [] [ text h ]) inputCsv.headers
+                |> tr []
+            ]
+        , tbody []
+            (inputCsv.records
+                |> List.map
+                    (\r ->
+                        List.map (\v -> td [] [ text v ]) r
+                            |> tr []
+                    )
+            )
+        ]
 
 
-getOutputTable : Html Msg
-getOutputTable =
-    text "Output Table"
+getResultTable : Csv -> Html Msg
+getResultTable resultCsv =
+    table [ class "ui inverted celled table" ]
+        [ thead []
+            [ List.map (\h -> th [] [ text h ]) resultCsv.headers
+                |> tr []
+            ]
+        , tbody []
+            (resultCsv.records
+                |> List.map
+                    (\r ->
+                        List.map (\v -> td [] [ text v ]) r
+                            |> tr []
+                    )
+            )
+        ]
