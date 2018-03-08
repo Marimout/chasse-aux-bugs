@@ -1,29 +1,30 @@
 module App.Pages.Database exposing (databaseView)
 
-import App.Messages exposing (Msg(ChangePage))
+import App.Messages exposing (..)
 import App.Model exposing (Model, Page(Overview), Record)
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 
 
 databaseView : Model -> Html Msg
 databaseView model =
     div []
-        [ h2 [ class "ui center aligned header" ] [ text "Database Page" ]
-        , div [ class "ui segment grid" ]
-            [ div [ class "sixteen wide column" ]
+        [ div [ class "ui segment grid" ]
+            [ div [ class "sixteen wide column" ] [ h4 [ class "ui left aligned header" ] [ text "Nom de la table : TRANSACTION" ] ]
+            , div [ class "sixteen wide column" ]
                 [ table [ class "ui celled table" ] (tableHeader :: tableContentFromDatabase model)
                 ]
             , div [ class "sixteen wide column" ]
                 [ div [ class "ui form" ]
                     [ div [ class "field" ]
                         [ label [] [ text "Query" ]
-                        , textarea [] []
+                        , textarea [ onInput UpdateSqlQuery ] []
                         ]
                     ]
                 ]
             , div [ class "center aligned sixteen wide column" ]
-                [ button [ class "ui button centered" ] [ text "Executer" ] ]
+                [ button [ class "ui button centered", onClick (ExecuteQuery) ] [ text "Executer" ] ]
             ]
         ]
 
@@ -58,7 +59,7 @@ tableItemFromDatabase record =
     [ td [] [ text (toString record.id) ]
     , td [] [ text record.date ]
     , td [] [ text record.libelle ]
-    , td [] [ text record.montant ]
+    , td [ class "right aligned" ] [ text record.montant ]
     , td [] [ text record.devise ]
     ]
 

@@ -15,6 +15,8 @@ type alias Model =
     , outputRows : List String
     , errorMessage : String
     , data : Maybe (List Record)
+    , queryToExecute : String
+    , queryResult : String
     }
 
 

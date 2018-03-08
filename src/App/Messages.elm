@@ -11,7 +11,10 @@ type Msg
     | ChangePage Page
     | ChangeInputSet Int
     | ComputeInputSetResult
-    | LoadData Json.Encode.Value
     | LevelUp
     | LevelInfosResult (Result Http.Error LevelInfos)
     | InputCsvResult (Result Http.Error String)
+    | LoadDataFromDatabase Json.Encode.Value
+    | UpdateSqlQuery String
+    | ExecuteQuery
+    | UpdateQueryResult String

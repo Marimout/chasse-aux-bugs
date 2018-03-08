@@ -1,4 +1,4 @@
-module App.Update exposing (update)
+port module App.Update exposing (update)
 
 import App.Messages exposing (Msg(..))
 import App.Model exposing (InputSet, LevelInfos, Model, Record)
@@ -34,19 +34,7 @@ update msg model =
                 newInputSet =
                     { oldInputSet | resultCsv = result }
             in
-            ( { model | currentInputSet = newInputSet }, Cmd.none )
-
-        LoadData newData ->
-            let
-                t =
-                    Decode.decodeValue (Decode.list decodeRecord) newData
-            in
-            case t of
-                Ok record ->
-                    ( { model | data = Just record }, Cmd.none )
-
-                Err error ->
-                    ( { model | data = Nothing }, Cmd.none )
+                ( { model | currentInputSet = newInputSet }, Cmd.none )
 
         LevelUp ->
             let
@@ -57,11 +45,11 @@ update msg model =
                     Http.get (getLevelDir newLvlNb ++ "/infos.json") decodeLevelInfos
                         |> Http.send LevelInfosResult
             in
-            ( { model
-                | lvlNb = newLvlNb
-              }
-            , cmd
-            )
+                ( { model
+                    | lvlNb = newLvlNb
+                  }
+                , cmd
+                )
 
         LevelInfosResult result ->
             case result of
@@ -71,7 +59,7 @@ update msg model =
                             Http.getString (getLevelDir lvlInfos.number ++ "/inputs.csv")
                                 |> Http.send InputCsvResult
                     in
-                    ( { model | level = Just lvlInfos }, cmd )
+                        ( { model | level = Just lvlInfos }, cmd )
 
                 Err error ->
                     ( { model | errorMessage = toString error }, Cmd.none )
@@ -83,6 +71,27 @@ update msg model =
 
                 Err error ->
                     ( { model | errorMessage = toString error, inputGlobalSheet = defaultCsv }, Cmd.none )
+
+        LoadDataFromDatabase newData ->
+            let
+                t =
+                    Decode.decodeValue (Decode.list decodeRecord) newData
+            in
+                case t of
+                    Ok record ->
+                        ( { model | data = Just record }, Cmd.none )
+
+                    Err error ->
+                        ( { model | data = Nothing }, Cmd.none )
+
+        UpdateSqlQuery query ->
+            ( { model | queryToExecute = query }, Cmd.none )
+
+        ExecuteQuery ->
+            ( model, executeQuery model.queryToExecute )
+
+        UpdateQueryResult result ->
+            ( { model | queryResult = result }, Cmd.none )
 
 
 getLevelDir : Int -> String
@@ -127,7 +136,10 @@ getInputSet number model =
                 |> List.drop (List.sum <| List.take number rowsBySheet)
                 |> List.take (Maybe.withDefault 0 <| List.head <| List.drop number rowsBySheet)
     in
-    { number = number
-    , inputCsv = Csv model.inputGlobalSheet.headers inputRecords
-    , resultCsv = defaultCsv
-    }
+        { number = number
+        , inputCsv = Csv model.inputGlobalSheet.headers inputRecords
+        , resultCsv = defaultCsv
+        }
+
+
+port executeQuery : String -> Cmd msg

@@ -46,6 +46,8 @@ init =
             , outputRows = []
             , errorMessage = ""
             , data = Nothing
+            , queryToExecute = ""
+            , queryResult = ""
             }
     in
-    update LevelUp model
+        update LevelUp model
