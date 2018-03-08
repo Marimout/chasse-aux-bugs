@@ -1,4 +1,4 @@
-module App.Model exposing (BlocklyData, InputSet, LevelInfos, Model, Page(..), Record)
+module App.Model exposing (BlocklyData, InputSet, LevelInfos, Model, Page(..), Record, TableCell)
 
 import Csv exposing (Csv)
 
@@ -34,6 +34,13 @@ type alias InputSet =
     { number : Int
     , inputCsv : Csv
     , resultCsv : Csv
+    }
+
+
+type alias TableCell =
+    { value : String
+    , row : Int
+    , col : Int
     }
 
 

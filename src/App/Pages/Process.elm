@@ -1,11 +1,11 @@
 module App.Pages.Process exposing (processView)
 
-import App.Messages exposing (Msg(ChangePage))
-import App.Model exposing (BlocklyData, Model, Page(Overview))
+import App.Messages exposing (Msg(ChangePage, EditInputSetCsv))
+import App.Model exposing (BlocklyData, Model, Page(Overview), TableCell)
 import Csv exposing (Csv)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Utils exposing (onTableCellInput)
 
 
 processView : Model -> BlocklyData -> Html Msg
@@ -42,9 +42,24 @@ getInputTable inputCsv =
             ]
         , tbody []
             (inputCsv.records
-                |> List.map
-                    (\r ->
-                        List.map (\v -> td [] [ text v ]) r
+                |> List.indexedMap
+                    (\i row ->
+                        List.indexedMap
+                            (\j val ->
+                                td []
+                                    [ div [ class "ui fluid transparent input" ]
+                                        [ input
+                                            [ type_ "text"
+                                            , value val
+                                            , attribute "data-row" (toString i)
+                                            , attribute "data-col" (toString j)
+                                            , onTableCellInput EditInputSetCsv
+                                            ]
+                                            []
+                                        ]
+                                    ]
+                            )
+                            row
                             |> tr []
                     )
             )
