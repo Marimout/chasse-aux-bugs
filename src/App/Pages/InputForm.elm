@@ -14,7 +14,7 @@ inputFormView model =
         Just level ->
             div [ class "ui grid" ]
                 [ div [ class "four wide column" ] [ getInputsMenu model.currentInputSet.number <| List.length level.inputRowsBySheet - 1 ]
-                , div [ class "twelve wide stretched column" ] [ getInputTable model.currentInputSet.number level.inputRowsBySheet model.inputGlobalSheet ]
+                , div [ class "twelve wide stretched column" ] [ getInputTable model.currentInputSet.inputCsv ]
                 ]
 
         Nothing ->
@@ -40,21 +40,15 @@ getInputsMenu currentSet setsNb =
         |> div [ class "ui vertical fluid pointing menu" ]
 
 
-
--- TODO: refactor!
-
-
-getInputTable : Int -> List Int -> Csv -> Html Msg
-getInputTable currentSet rowsBySheet globalSheet =
+getInputTable : Csv -> Html Msg
+getInputTable inputCsv =
     table [ class "ui celled table" ]
         [ thead []
-            [ List.map (\h -> th [] [ text h ]) globalSheet.headers
+            [ List.map (\h -> th [] [ text h ]) inputCsv.headers
                 |> tr []
             ]
         , tbody []
-            (globalSheet.records
-                |> List.drop (List.sum <| List.take currentSet rowsBySheet)
-                |> List.take (Maybe.withDefault 0 <| List.head <| List.drop currentSet rowsBySheet)
+            (inputCsv.records
                 |> List.map
                     (\r ->
                         List.map (\v -> td [] [ text v ]) r
