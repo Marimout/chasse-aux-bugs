@@ -1,9 +1,10 @@
-module Utils exposing ((=>), defaultCsv, onTableCellInput, pair, viewIf)
+module Utils exposing ((=>), defaultCsv, onTableCellInput, pair, viewIf, getStandardTable, getInvertedTable)
 
 import App.Messages exposing (Msg)
 import App.Model exposing (TableCell)
 import Csv exposing (Csv)
-import Html exposing (Attribute, Html)
+import Html exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (on)
 import Json.Decode as Json
 
@@ -47,3 +48,31 @@ tableCellInputDecoder =
 jsonStringToIntDecoder : Json.Decoder String -> Json.Decoder Int
 jsonStringToIntDecoder =
     Json.map (\str -> String.toInt str |> Result.withDefault 0)
+
+
+getTable : ( String, Csv ) -> Html Msg
+getTable ( tableStyle, csv ) =
+    table [ class tableStyle ]
+        [ thead []
+            [ List.map (\h -> th [] [ text h ]) csv.headers
+                |> tr []
+            ]
+        , tbody []
+            (csv.records
+                |> List.map
+                    (\r ->
+                        List.map (\v -> td [] [ text v ]) r
+                            |> tr []
+                    )
+            )
+        ]
+
+
+getInvertedTable : Csv -> Html Msg
+getInvertedTable csv =
+    getTable ( "ui inverted celled table", csv )
+
+
+getStandardTable : Csv -> Html Msg
+getStandardTable csv =
+    getTable ( "ui celled table", csv )

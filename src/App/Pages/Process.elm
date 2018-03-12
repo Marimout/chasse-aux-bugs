@@ -5,7 +5,7 @@ import App.Model exposing (BlocklyData, Model, Page(Overview), TableCell)
 import Csv exposing (Csv)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Utils exposing (onTableCellInput)
+import Utils exposing (onTableCellInput, getInvertedTable)
 
 
 processView : Model -> BlocklyData -> Html Msg
@@ -21,7 +21,7 @@ processView model blocklyData =
                     ]
                 , div [ class "ui yellow segment" ]
                     [ h3 [ class "ui header" ] [ text "résultat du traitement" ]
-                    , getResultTable model.currentInputSet.resultCsv
+                    , getInvertedTable model.currentInputSet.resultCsv
                     ]
                 ]
             ]
@@ -60,24 +60,6 @@ getInputTable inputCsv =
                                     ]
                             )
                             row
-                            |> tr []
-                    )
-            )
-        ]
-
-
-getResultTable : Csv -> Html Msg
-getResultTable resultCsv =
-    table [ class "ui inverted celled table" ]
-        [ thead []
-            [ List.map (\h -> th [] [ text h ]) resultCsv.headers
-                |> tr []
-            ]
-        , tbody []
-            (resultCsv.records
-                |> List.map
-                    (\r ->
-                        List.map (\v -> td [] [ text v ]) r
                             |> tr []
                     )
             )
