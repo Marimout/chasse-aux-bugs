@@ -15,6 +15,8 @@ type alias Model =
     , outputRows : List String
     , errorMessage : String
     , data : Maybe (List Record)
+    , editingData : Maybe (List Record)
+    , isEditing : Bool
     , queryToExecute : String
     , queryResult : String
     }
@@ -41,6 +43,7 @@ type alias TableCell =
     { value : String
     , row : Int
     , col : Int
+    , fieldName : String
     }
 
 

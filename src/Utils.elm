@@ -39,10 +39,11 @@ onTableCellInput tagger =
 
 tableCellInputDecoder : Json.Decoder TableCell
 tableCellInputDecoder =
-    Json.map3 TableCell
+    Json.map4 TableCell
         (Json.at [ "target", "value" ] Json.string)
         (Json.at [ "target", "dataset", "row" ] Json.string |> jsonStringToIntDecoder)
         (Json.at [ "target", "dataset", "col" ] Json.string |> jsonStringToIntDecoder)
+        (Json.at [ "target", "dataset", "fieldname" ] Json.string)
 
 
 jsonStringToIntDecoder : Json.Decoder String -> Json.Decoder Int

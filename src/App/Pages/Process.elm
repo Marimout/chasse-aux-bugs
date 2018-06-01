@@ -53,6 +53,7 @@ getInputTable inputCsv =
                                             , value val
                                             , attribute "data-row" (toString i)
                                             , attribute "data-col" (toString j)
+                                            , attribute "data-fieldname" ""
                                             , onTableCellInput EditInputSetCsv
                                             ]
                                             []

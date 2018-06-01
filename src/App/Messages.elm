@@ -19,3 +19,5 @@ type Msg
     | UpdateSqlQuery String
     | ExecuteQuery
     | UpdateQueryResult String
+    | EditDatabaseRecord TableCell
+    | SaveModifiedData

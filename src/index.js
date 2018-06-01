@@ -62,3 +62,9 @@ function getDataAndSendToElm()
     app.ports.loadDataFromDatabase.send(res);
 }
 
+app.ports.updateTableFromData.subscribe(function(data) {
+    alasql('TRUNCATE TABLE transaction');
+    alasql(`SELECT * INTO transaction FROM ?`, [data])
+
+    getDataAndSendToElm();
+})

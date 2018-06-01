@@ -8,6 +8,12 @@ import Json.Decode as Decode exposing (Decoder, field)
 import Utils exposing (defaultCsv)
 
 
+port executeQuery : String -> Cmd msg
+
+
+port updateTableFromData : Maybe (List Record) -> Cmd msg
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -31,7 +37,7 @@ update msg model =
                 newInputSet =
                     { oldInputSet | inputCsv = getUpdatedInputCsv tableCell oldInputSet.inputCsv }
             in
-            update ComputeInputSetResult { model | currentInputSet = newInputSet }
+                update ComputeInputSetResult { model | currentInputSet = newInputSet }
 
         ComputeInputSetResult ->
             let
@@ -44,7 +50,7 @@ update msg model =
                 newInputSet =
                     { oldInputSet | resultCsv = result }
             in
-            ( { model | currentInputSet = newInputSet }, Cmd.none )
+                ( { model | currentInputSet = newInputSet }, Cmd.none )
 
         LevelUp ->
             let
@@ -55,7 +61,7 @@ update msg model =
                     Http.get (getLevelDir newLvlNb ++ "/infos.json") decodeLevelInfos
                         |> Http.send LevelInfosResult
             in
-            ( { model | lvlNb = newLvlNb }, cmd )
+                ( { model | lvlNb = newLvlNb }, cmd )
 
         LevelInfosResult result ->
             case result of
@@ -65,7 +71,7 @@ update msg model =
                             Http.getString (getLevelDir lvlInfos.number ++ "/inputs.csv")
                                 |> Http.send InputCsvResult
                     in
-                    ( { model | level = Just lvlInfos }, cmd )
+                        ( { model | level = Just lvlInfos }, cmd )
 
                 Err error ->
                     ( { model | errorMessage = toString error }, Cmd.none )
@@ -83,12 +89,15 @@ update msg model =
                 t =
                     Decode.decodeValue (Decode.list decodeRecord) newData
             in
-            case t of
-                Ok record ->
-                    ( { model | data = Just record }, Cmd.none )
+                case t of
+                    Ok record ->
+                        ( { model | data = Just record, editingData = Just record }, Cmd.none )
 
-                Err error ->
-                    ( { model | data = Nothing }, Cmd.none )
+                    Err error ->
+                        ( { model | data = Nothing, editingData = Nothing }, Cmd.none )
+
+        EditDatabaseRecord tableCell ->
+            ( { model | isEditing = True, editingData = Just <| getUpdatedRecord tableCell (Maybe.withDefault [] model.data) }, Cmd.none )
 
         UpdateSqlQuery query ->
             ( { model | queryToExecute = query }, Cmd.none )
@@ -98,6 +107,9 @@ update msg model =
 
         UpdateQueryResult result ->
             ( { model | queryResult = result }, Cmd.none )
+
+        SaveModifiedData ->
+            ( model, updateTableFromData model.editingData )
 
 
 getLevelDir : Int -> String
@@ -142,10 +154,10 @@ getInputSet number model =
                 |> List.drop (List.sum <| List.take number rowsBySheet)
                 |> List.take (Maybe.withDefault 0 <| List.head <| List.drop number rowsBySheet)
     in
-    { number = number
-    , inputCsv = Csv model.inputGlobalSheet.headers inputRecords
-    , resultCsv = defaultCsv
-    }
+        { number = number
+        , inputCsv = Csv model.inputGlobalSheet.headers inputRecords
+        , resultCsv = defaultCsv
+        }
 
 
 getUpdatedInputCsv : TableCell -> Csv -> Csv
@@ -168,7 +180,35 @@ getUpdatedInputCsv tableCell inputCsv =
                             row
                     )
     in
-    { inputCsv | records = records }
+        { inputCsv | records = records }
 
 
-port executeQuery : String -> Cmd msg
+getUpdatedRecord : TableCell -> List Record -> List Record
+getUpdatedRecord tableCell inputRecord =
+    let
+        updateRecord : Record -> TableCell -> Record
+        updateRecord record tc =
+            case tc.fieldName of
+                "date" ->
+                    { record | date = tc.value }
+
+                "libelle" ->
+                    { record | libelle = tc.value }
+
+                "montant" ->
+                    { record | montant = tc.value }
+
+                "devise" ->
+                    { record | devise = tc.value }
+
+                _ ->
+                    record
+    in
+        inputRecord
+            |> List.indexedMap
+                (\i record ->
+                    if i == tableCell.row then
+                        updateRecord record tableCell
+                    else
+                        record
+                )

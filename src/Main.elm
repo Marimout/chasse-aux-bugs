@@ -46,6 +46,8 @@ init =
             , outputRows = []
             , errorMessage = ""
             , data = Nothing
+            , editingData = Nothing
+            , isEditing = False
             , queryToExecute = ""
             , queryResult = ""
             }

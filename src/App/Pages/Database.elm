@@ -5,6 +5,7 @@ import App.Model exposing (Model, Page(Overview), Record)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Utils exposing (onTableCellInput, viewIf)
 
 
 databaseView : Model -> Html Msg
@@ -15,6 +16,10 @@ databaseView model =
             , div [ class "sixteen wide column" ]
                 [ table [ class "ui celled table" ] (tableHeader :: tableContentFromDatabase model)
                 ]
+            , viewIf (model.isEditing)
+                (div [ class "center aligned sixteen wide column" ]
+                    [ button [ class "ui button centered", onClick (SaveModifiedData) ] [ text "Save modification" ] ]
+                )
             , div [ class "sixteen wide column" ]
                 [ div [ class "ui form" ]
                     [ div [ class "field" ]
@@ -44,23 +49,74 @@ tableHeader =
 
 tableContentFromDatabase : Model -> List (Html Msg)
 tableContentFromDatabase model =
-    case model.data of
+    case model.editingData of
         Nothing ->
             []
 
         Just data ->
             data
-                |> List.map tableItemFromDatabase
+                |> List.indexedMap tableItemFromDatabase
                 |> List.map (tr [])
 
 
-tableItemFromDatabase : Record -> List (Html Msg)
-tableItemFromDatabase record =
-    [ td [] [ text (toString record.id) ]
-    , td [] [ text record.date ]
-    , td [] [ text record.libelle ]
-    , td [ class "right aligned" ] [ text record.montant ]
-    , td [] [ text record.devise ]
+tableItemFromDatabase : Int -> Record -> List (Html Msg)
+tableItemFromDatabase rowId record =
+    [ td
+        []
+        [ text (toString record.id) ]
+    , td
+        []
+        [ div [ class "ui fluid transparent input" ]
+            [ input
+                [ type_ "text"
+                , value record.date
+                , attribute "data-row" (toString rowId)
+                , attribute "data-col" "0"
+                , attribute "data-fieldname" "date"
+                , onTableCellInput EditDatabaseRecord
+                ]
+                []
+            ]
+        ]
+    , td []
+        [ div [ class "ui fluid transparent input" ]
+            [ input
+                [ type_ "text"
+                , value record.libelle
+                , attribute "data-row" (toString rowId)
+                , attribute "data-col" "1"
+                , attribute "data-fieldname" "libelle"
+                , onTableCellInput EditDatabaseRecord
+                ]
+                []
+            ]
+        ]
+    , td [ class "right aligned" ]
+        [ div [ class "ui fluid transparent input" ]
+            [ input
+                [ type_ "text"
+                , value record.montant
+                , attribute "data-row" (toString rowId)
+                , attribute "data-col" "2"
+                , attribute "data-fieldname" "montant"
+                , onTableCellInput EditDatabaseRecord
+                ]
+                []
+            ]
+        ]
+    , td []
+        [ div [ class "ui fluid transparent input" ]
+            [ input
+                [ type_ "text"
+                , value record.devise
+                , attribute "data-row" (toString rowId)
+                , attribute "data-col" "3"
+                , attribute "data-fieldname" "devise"
+                , onTableCellInput EditDatabaseRecord
+                ]
+                []
+            ]
+        ]
     ]
 
 
