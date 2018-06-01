@@ -37,7 +37,7 @@ update msg model =
                 newInputSet =
                     { oldInputSet | inputCsv = getUpdatedInputCsv tableCell oldInputSet.inputCsv }
             in
-                update ComputeInputSetResult { model | currentInputSet = newInputSet }
+            update ComputeInputSetResult { model | currentInputSet = newInputSet }
 
         ComputeInputSetResult ->
             let
@@ -50,7 +50,7 @@ update msg model =
                 newInputSet =
                     { oldInputSet | resultCsv = result }
             in
-                ( { model | currentInputSet = newInputSet }, Cmd.none )
+            ( { model | currentInputSet = newInputSet }, Cmd.none )
 
         LevelUp ->
             let
@@ -61,40 +61,87 @@ update msg model =
                     Http.get (getLevelDir newLvlNb ++ "/infos.json") decodeLevelInfos
                         |> Http.send LevelInfosResult
             in
-                ( { model | lvlNb = newLvlNb }, cmd )
+            ( { model | lvlNb = newLvlNb }, cmd )
 
         LevelInfosResult result ->
             case result of
                 Ok lvlInfos ->
-                    let
-                        cmd =
-                            Http.getString (getLevelDir lvlInfos.number ++ "/inputs.csv")
-                                |> Http.send InputCsvResult
-                    in
-                        ( { model | level = Just lvlInfos }, cmd )
+                    update LoadInputCsv { model | level = Just lvlInfos }
 
                 Err error ->
                     ( { model | errorMessage = toString error }, Cmd.none )
 
+        LoadInputCsv ->
+            case model.level of
+                Just lvlInfos ->
+                    ( model, Http.getString (getLevelDir lvlInfos.number ++ "/inputs.csv") |> Http.send InputCsvResult )
+
+                Nothing ->
+                    update NoOp model
+
         InputCsvResult result ->
             case result of
                 Ok inputCsv ->
-                    update (ChangeInputSet model.currentInputSet.number) { model | inputGlobalSheet = Csv.parse inputCsv }
+                    let
+                        ( newModel, newCmd ) =
+                            update (ChangeInputSet model.currentInputSet.number) { model | inputGlobalSheet = Csv.parse inputCsv }
+                    in
+                    if newCmd == Cmd.none then
+                        update (LoadBlocklyToolbox "input") newModel
+                    else
+                        ( newModel, newCmd )
 
                 Err error ->
                     ( { model | errorMessage = toString error, inputGlobalSheet = defaultCsv }, Cmd.none )
+
+        LoadBlocklyToolbox toolboxType ->
+            case model.level of
+                Just lvlInfos ->
+                    ( model
+                    , Http.getString
+                        (getLevelDir lvlInfos.number ++ "/blockly-toolbox-" ++ toolboxType ++ ".xml")
+                        |> Http.send (BlocklyToolboxResult toolboxType)
+                    )
+
+                Nothing ->
+                    update NoOp model
+
+        BlocklyToolboxResult toolboxType result ->
+            case result of
+                Ok toolbox ->
+                    if toolboxType == "input" then
+                        let
+                            oldBlocklyData =
+                                model.inputBlockly
+
+                            newBlocklyData =
+                                { oldBlocklyData | toolbox = toolbox }
+                        in
+                        update (LoadBlocklyToolbox "output") { model | inputBlockly = newBlocklyData }
+                    else
+                        let
+                            oldBlocklyData =
+                                model.outputBlockly
+
+                            newBlocklyData =
+                                { oldBlocklyData | toolbox = toolbox }
+                        in
+                        ( { model | outputBlockly = newBlocklyData }, Cmd.none )
+
+                Err error ->
+                    ( { model | errorMessage = toString error }, Cmd.none )
 
         LoadDataFromDatabase newData ->
             let
                 t =
                     Decode.decodeValue (Decode.list decodeRecord) newData
             in
-                case t of
-                    Ok record ->
-                        ( { model | data = Just record, editingData = Just record }, Cmd.none )
+            case t of
+                Ok record ->
+                    ( { model | data = Just record, editingData = Just record }, Cmd.none )
 
-                    Err error ->
-                        ( { model | data = Nothing, editingData = Nothing }, Cmd.none )
+                Err error ->
+                    ( { model | data = Nothing, editingData = Nothing }, Cmd.none )
 
         EditDatabaseRecord tableCell ->
             ( { model | isEditing = True, editingData = Just <| getUpdatedRecord tableCell (Maybe.withDefault [] model.data) }, Cmd.none )
@@ -154,10 +201,10 @@ getInputSet number model =
                 |> List.drop (List.sum <| List.take number rowsBySheet)
                 |> List.take (Maybe.withDefault 0 <| List.head <| List.drop number rowsBySheet)
     in
-        { number = number
-        , inputCsv = Csv model.inputGlobalSheet.headers inputRecords
-        , resultCsv = defaultCsv
-        }
+    { number = number
+    , inputCsv = Csv model.inputGlobalSheet.headers inputRecords
+    , resultCsv = defaultCsv
+    }
 
 
 getUpdatedInputCsv : TableCell -> Csv -> Csv
@@ -180,7 +227,7 @@ getUpdatedInputCsv tableCell inputCsv =
                             row
                     )
     in
-        { inputCsv | records = records }
+    { inputCsv | records = records }
 
 
 getUpdatedRecord : TableCell -> List Record -> List Record
@@ -204,11 +251,11 @@ getUpdatedRecord tableCell inputRecord =
                 _ ->
                     record
     in
-        inputRecord
-            |> List.indexedMap
-                (\i record ->
-                    if i == tableCell.row then
-                        updateRecord record tableCell
-                    else
-                        record
-                )
+    inputRecord
+        |> List.indexedMap
+            (\i record ->
+                if i == tableCell.row then
+                    updateRecord record tableCell
+                else
+                    record
+            )

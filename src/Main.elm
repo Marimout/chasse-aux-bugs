@@ -52,4 +52,4 @@ init =
             , queryResult = ""
             }
     in
-        update LevelUp model
+    update LevelUp model
