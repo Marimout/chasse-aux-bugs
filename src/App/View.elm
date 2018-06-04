@@ -46,7 +46,7 @@ pageBody model =
             inputFormView model
 
         InputProcess ->
-            processView model model.inputBlockly
+            processView model model.inputBlockly model.currentInputSet.inputCsv
 
         Database ->
             databaseView model
