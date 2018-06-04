@@ -1,7 +1,7 @@
-module Utils exposing ((=>), defaultCsv, onTableCellInput, pair, viewIf, getStandardTable, getInvertedTable)
+module Utils exposing ((=>), defaultCsv, onTableCellInput, pair, viewIf, getStandardTable, getInvertedTable, dataToCsv)
 
 import App.Messages exposing (Msg)
-import App.Model exposing (TableCell)
+import App.Model exposing (TableCell, Model)
 import Csv exposing (Csv)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -77,3 +77,16 @@ getInvertedTable csv =
 getStandardTable : Csv -> Html Msg
 getStandardTable csv =
     getTable ( "ui celled table", csv )
+
+
+dataToCsv : Model -> Csv
+dataToCsv model =
+    case model.data of
+        Just records ->
+            Csv model.inputGlobalSheet.headers
+                (records
+                    |> List.map (\record -> [ toString record.id, record.date, record.libelle, record.montant, record.devise ])
+                )
+
+        Nothing ->
+            Csv model.inputGlobalSheet.headers []

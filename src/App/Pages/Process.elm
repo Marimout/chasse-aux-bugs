@@ -48,15 +48,7 @@ getInputTable inputCsv =
                             (\j val ->
                                 td []
                                     [ div [ class "ui fluid transparent input" ]
-                                        [ input
-                                            [ type_ "text"
-                                            , value val
-                                            , attribute "data-row" (toString i)
-                                            , attribute "data-col" (toString j)
-                                            , attribute "data-fieldname" ""
-                                            , onTableCellInput EditInputSetCsv
-                                            ]
-                                            []
+                                        [ text val
                                         ]
                                     ]
                             )

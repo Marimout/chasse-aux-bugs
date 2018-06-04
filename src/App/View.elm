@@ -11,7 +11,7 @@ import App.Pages.Process exposing (processView)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Utils exposing (viewIf)
+import Utils exposing (viewIf, dataToCsv)
 
 
 view : Model -> Html Msg
@@ -52,7 +52,7 @@ pageBody model =
             databaseView model
 
         OutputProcess ->
-            processView model model.outputBlockly model.currentInputSet.inputCsv
+            processView model model.outputBlockly (dataToCsv model)
 
         Output ->
             outputView model
