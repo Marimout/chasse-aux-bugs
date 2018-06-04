@@ -52,7 +52,7 @@ pageBody model =
             databaseView model
 
         OutputProcess ->
-            processView model model.outputBlockly
+            processView model model.outputBlockly model.currentInputSet.inputCsv
 
         Output ->
             outputView model
