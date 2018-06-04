@@ -14,6 +14,9 @@ port executeQuery : String -> Cmd msg
 port updateTableFromData : Maybe (List Record) -> Cmd msg
 
 
+port injectBlockly : ( String, String ) -> Cmd msg
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
