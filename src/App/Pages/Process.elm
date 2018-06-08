@@ -13,7 +13,7 @@ processView model blocklyData inputCsv =
     div [ class "ui two column grid" ]
         [ div [ class "stretched row" ]
             [ div [ class "column" ]
-                [ div [ class "ui segment" ] [ getBlocklyWorkspace blocklyData ] ]
+                [ div [ class "ui segment" ] [ div [ id "blocklyWorkspace" ] []  ] ]
             , div [ class "column" ]
                 [ div [ class "ui green segment" ]
                     [ h3 [ class "ui header" ] [ text "données en entrée" ]

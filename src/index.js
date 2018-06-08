@@ -1,8 +1,9 @@
 import 'semantic-ui-css/semantic.min.css';
 import * as alasql from 'alasql'
-//import 'script-loader!blockly/blockly_compressed.js';
-//import 'script-loader!blockly/blocks_compressed.js'
-//import 'script-loader!blockly/msg/js/fr.js'
+// import 'script-loader!blockly/blockly_compressed.js';
+// import 'script-loader!blockly/blocks_compressed.js';
+// import 'script-loader!blockly/javascript_compressed.js';
+// import 'script-loader!blockly/msg/js/fr.js';
 
 import { Main } from './Main.elm';
 import injectBlockly from './js/blockly.js';

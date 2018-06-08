@@ -1,13 +1,15 @@
-import 'script-loader!blockly/blockly_compressed.js';
-import 'script-loader!blockly/blocks_compressed.js';
-import 'script-loader!blockly/msg/js/fr.js';
+// import 'script-loader!blockly/blockly_compressed.js';
+// import 'script-loader!blockly/blocks_compressed.js';
+// import 'script-loader!blockly/javascript_compressed.js';
+// import 'script-loader!blockly/msg/js/fr.js';
 
 export default function injectBlockly(args) {
   var [divId, toolbox] = args;
 
-  console.log("divId, toolbox", [divId, toolbox]);
+  console.log("divId", divId, document.getElementById(divId));
+//   console.log("Blockly", Blockly);
 
-  window.workspace = Blockly.inject(divId, {
+  window.workspace = Blockly.inject(document.getElementById(divId), {
         toolbox: toolbox
       });
 

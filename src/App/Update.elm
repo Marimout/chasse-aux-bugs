@@ -30,6 +30,9 @@ update msg model =
             case newPage of
                 Database ->
                     ( { model | page = newPage, editingData = model.data }, Cmd.none )
+                    
+                InputProcess ->
+                    ( { model | page = newPage }, injectBlockly ("blocklyWorkspace", model.inputBlockly.toolbox) )
 
                 _ ->
                     ( { model | page = newPage }, Cmd.none )
