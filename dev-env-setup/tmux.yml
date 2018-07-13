@@ -4,7 +4,7 @@ tmux_options: -f ~/.tmux.conf
 
 windows:
   - main:
-      layout: main-vertical
+      layout: f83a,204x48,0,0{145x48,0,0,0,58x48,146,0[58x33,146,0,2,58x14,146,34,3]}
       panes:
         - vim src/Main.elm
         - start:
