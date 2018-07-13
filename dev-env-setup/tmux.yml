@@ -1,0 +1,14 @@
+name: chasse-aux-bugs
+root: ~/chasse-aux-bugs
+tmux_options: -f ~/.tmux.conf
+
+windows:
+  - main:
+      layout: main-vertical
+      panes:
+        - vim src/Main.elm
+        - start:
+          - git pull
+          - ea start
+  - shell:
+      - ls -lart
