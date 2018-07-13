@@ -134,7 +134,8 @@ COPY .ssh/known_hosts ${HOME}/.ssh/
 RUN sudo chown user:user ${HOME}/.ssh/id_rsa
 
 # Clone repository.
-RUN git clone git@github.com:Marimout/chasse-aux-bugs.git
+#RUN git clone git@github.com:Marimout/chasse-aux-bugs.git
+RUN git clone https://github.com/Marimout/chasse-aux-bugs.git
 
 ENV WORKSPACE ${HOME}/chasse-aux-bugs
 WORKDIR ${WORKSPACE}
