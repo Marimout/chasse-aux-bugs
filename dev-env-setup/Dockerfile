@@ -134,9 +134,9 @@ COPY .ssh/known_hosts ${HOME}/.ssh/
 RUN sudo chown user:user ${HOME}/.ssh/id_rsa
 
 # Clone repository.
-RUN git clone git@gitlab.com:Hatscat/bytebeat-sequencer.git
+RUN git clone git@github.com:Marimout/chasse-aux-bugs.git
 
-ENV WORKSPACE ${HOME}/bytebeat-sequencer
+ENV WORKSPACE ${HOME}/chasse-aux-bugs
 WORKDIR ${WORKSPACE}
 
 RUN git pull
