@@ -5,7 +5,7 @@ import App.Model exposing (BlocklyData, Model, Page(Overview), TableCell)
 import Csv exposing (Csv)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Utils exposing (getInvertedTable, onTableCellInput)
+import Utils exposing (getInvertedTable, onTableCellInput, fullHeight)
 
 
 processView : Model -> BlocklyData -> Csv -> Html Msg
@@ -13,7 +13,10 @@ processView model blocklyData inputCsv =
     div [ class "ui two column grid" ]
         [ div [ class "stretched row" ]
             [ div [ class "column" ]
-                [ div [ class "ui segment" ] [ div [ id "blocklyWorkspace" ] []  ] ]
+                [ div
+                    [ class "ui segment", style [ ( "min-height", "500px" ) ] ]
+                    [ div [ id "blocklyWorkspace", fullHeight ] [] ]
+                ]
             , div [ class "column" ]
                 [ div [ class "ui green segment" ]
                     [ h3 [ class "ui header" ] [ text "données en entrée" ]

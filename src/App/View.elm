@@ -11,12 +11,12 @@ import App.Pages.Process exposing (processView)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Utils exposing (viewIf, dataToCsv)
+import Utils exposing (viewIf, dataToCsv, fullHeight)
 
 
 view : Model -> Html Msg
 view model =
-    div []
+    div [ fullHeight ]
         [ viewIf (not <| String.isEmpty model.errorMessage)
             (h3 [ class "ui block red header" ] [ text model.errorMessage ])
         , div [ class "ui segment grid" ]

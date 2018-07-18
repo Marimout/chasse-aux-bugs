@@ -15,19 +15,31 @@ export default function injectBlockly(args) {
       setTimeout(initBlocklyWorkspace, 200);
       return;
     }
-
-    console.log('divId', divId, blocklyDiv);
-
-    blocklyDiv.style.height = '100%';
+    //blocklyDiv.style.height = '100%';
 
     window.workspace = Blockly.inject(blocklyDiv, {
       toolbox: toolbox,
     });
 
     initReplaceBlock();
+    //window.addEventListener('resize', onWorkspaceResize);
+    //onWorkspaceResize();
   };
 
   initBlocklyWorkspace();
+}
+
+// TODO: add delete workspace function, called when page change
+// TODO: add event that generate the code and interprete it
+
+function onWorkspaceResize() {
+  var blocklyDiv = document.getElementById('blocklyWorkspace');
+  var rootDiv = document.getElementById('root');
+
+  blocklyDiv.style.height =
+    window.innerHeight - rootDiv.children[0].children[0].offsetHeight + 'px';
+
+  Blockly.svgResize(window.workspace);
 }
 
 export function initReplaceBlock() {

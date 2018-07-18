@@ -1,4 +1,4 @@
-module Utils exposing ((=>), defaultCsv, onTableCellInput, pair, viewIf, getStandardTable, getInvertedTable, dataToCsv)
+module Utils exposing ((=>), defaultCsv, onTableCellInput, pair, viewIf, getStandardTable, getInvertedTable, dataToCsv, fullHeight)
 
 import App.Messages exposing (Msg)
 import App.Model exposing (TableCell, Model)
@@ -25,6 +25,11 @@ viewIf condition content =
         content
     else
         Html.text ""
+
+
+fullHeight : Attribute msg
+fullHeight =
+    style [ ( "height", "100%" ) ]
 
 
 defaultCsv : Csv
