@@ -1,10 +1,6 @@
 // @format
-// import 'script-loader!blockly/blockly_compressed.js';
-// import 'script-loader!blockly/blocks_compressed.js';
-// import 'script-loader!blockly/javascript_compressed.js';
-// import 'script-loader!blockly/msg/js/fr.js';
 
-export default function injectBlockly(args) {
+export function injectBlockly(args) {
   var [divId, toolbox] = args;
 
   let initBlocklyWorkspace = () => {
@@ -29,7 +25,13 @@ export default function injectBlockly(args) {
   initBlocklyWorkspace();
 }
 
-// TODO: add delete workspace function, called when page change
+export function removeBlockly() {
+  if (window.workspace) {
+    window.workspace.dispose();
+    window.workspace = null;
+  }
+}
+
 // TODO: add event that generate the code and interprete it
 
 function onWorkspaceResize() {
@@ -42,7 +44,7 @@ function onWorkspaceResize() {
   Blockly.svgResize(window.workspace);
 }
 
-export function initReplaceBlock() {
+function initReplaceBlock() {
   Blockly.Blocks['text_replace'] = {
     init: function() {
       this.appendValueInput('in')

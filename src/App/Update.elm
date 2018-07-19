@@ -17,6 +17,9 @@ port updateTableFromData : Maybe (List Record) -> Cmd msg
 port injectBlockly : ( String, String ) -> Cmd msg
 
 
+port removeBlockly : () -> Cmd msg
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -33,6 +36,12 @@ update msg model =
 
                 InputProcess ->
                     ( { model | page = newPage }, injectBlockly ( "blocklyWorkspace", model.inputBlockly.toolbox ) )
+
+                OutputProcess ->
+                    ( { model | page = newPage }, injectBlockly ( "blocklyWorkspace", model.outputBlockly.toolbox ) )
+
+                Overview ->
+                    ( { model | page = newPage }, removeBlockly () )
 
                 _ ->
                     ( { model | page = newPage }, Cmd.none )
