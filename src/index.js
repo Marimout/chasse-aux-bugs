@@ -10,7 +10,7 @@ import registerServiceWorker from './registerServiceWorker';
 
 var app = Main.embed(document.getElementById('root'));
 
-app.ports.injectBlockly.subscribe(injectBlockly);
+app.ports.injectBlockly.subscribe(injectBlockly.bind(this, app));
 app.ports.removeBlockly.subscribe(removeBlockly);
 
 registerServiceWorker();

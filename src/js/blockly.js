@@ -1,6 +1,6 @@
 // @format
 
-export function injectBlockly(args) {
+export function injectBlockly(app, args) {
   var [divId, toolbox] = args;
 
   let initBlocklyWorkspace = () => {
@@ -13,11 +13,23 @@ export function injectBlockly(args) {
     }
     //blocklyDiv.style.height = '100%';
 
-    window.workspace = Blockly.inject(blocklyDiv, {
+    window.workspace = window.Blockly.inject(blocklyDiv, {
       toolbox: toolbox,
     });
 
     initReplaceBlock();
+    
+    let onChange = e => {
+// TODO: add event that generate the code and interprete it
+        if (e.type == window.Blockly.Events.CHANGE) {
+            let code = window.Blockly.JavaScript.workspaceToCode(window.workspace);
+            console.log("code", code);
+            // TODO: eval code with parameter (data rows)
+            app.ports.XXX.send(code); // TODO
+        }
+    }
+    
+    window.workspace.addChangeListener(onChange);
     //window.addEventListener('resize', onWorkspaceResize);
     //onWorkspaceResize();
   };
@@ -31,8 +43,6 @@ export function removeBlockly() {
     window.workspace = null;
   }
 }
-
-// TODO: add event that generate the code and interprete it
 
 function onWorkspaceResize() {
   var blocklyDiv = document.getElementById('blocklyWorkspace');
