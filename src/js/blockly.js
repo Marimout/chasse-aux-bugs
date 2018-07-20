@@ -18,17 +18,19 @@ export function injectBlockly(app, args) {
     });
 
     initReplaceBlock();
-    
+
     let onChange = e => {
-// TODO: add event that generate the code and interprete it
-        if (e.type == window.Blockly.Events.CHANGE) {
-            let code = window.Blockly.JavaScript.workspaceToCode(window.workspace);
-            console.log("code", code);
-            // TODO: eval code with parameter (data rows)
-            app.ports.XXX.send(code); // TODO
-        }
-    }
-    
+      console.log('change type', e.type);
+      if (
+        e.type == window.Blockly.Events.CHANGE ||
+        e.type == window.Blockly.Events.MOVE
+      ) {
+        let code = window.Blockly.JavaScript.workspaceToCode(window.workspace);
+        console.log('code', code);
+        app.ports.blocklyCodeChange.send(code);
+      }
+    };
+
     window.workspace.addChangeListener(onChange);
     //window.addEventListener('resize', onWorkspaceResize);
     //onWorkspaceResize();
@@ -36,6 +38,9 @@ export function injectBlockly(app, args) {
 
   initBlocklyWorkspace();
 }
+
+// TODO: add event that generate the code and interprete it
+// TODO: eval code with parameter (data rows)
 
 export function removeBlockly() {
   if (window.workspace) {

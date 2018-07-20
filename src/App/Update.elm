@@ -178,6 +178,17 @@ update msg model =
         SaveModifiedData ->
             ( model, updateTableFromData model.editingData )
 
+        EvalBlocklyCode code ->
+            case model.page of
+                InputProcess ->
+                    ( model, Cmd.none )
+
+                OutputProcess ->
+                    ( model, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
 
 getLevelDir : Int -> String
 getLevelDir lvlNb =

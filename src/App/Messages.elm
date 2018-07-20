@@ -24,3 +24,4 @@ type Msg
     | UpdateQueryResult String
     | EditDatabaseRecord TableCell
     | SaveModifiedData
+    | EvalBlocklyCode String

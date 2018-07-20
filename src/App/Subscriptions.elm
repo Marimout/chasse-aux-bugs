@@ -8,6 +8,9 @@ import Json.Encode exposing (..)
 port loadDataFromDatabase : (Json.Encode.Value -> msg) -> Sub msg
 
 
+port blocklyCodeChange : (String -> msg) -> Sub msg
+
+
 port updateQueryExecutionResult : (String -> msg) -> Sub msg
 
 
@@ -17,4 +20,5 @@ subscriptions model =
     Sub.batch
         [ loadDataFromDatabase LoadDataFromDatabase
         , updateQueryExecutionResult UpdateQueryResult
+        , blocklyCodeChange EvalBlocklyCode
         ]
