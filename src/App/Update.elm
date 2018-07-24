@@ -17,6 +17,9 @@ port updateTableFromData : Maybe (List Record) -> Cmd msg
 port injectBlockly : ( String, String ) -> Cmd msg
 
 
+port evalBlockly : ( String, List Record ) -> Cmd msg
+
+
 port removeBlockly : () -> Cmd msg
 
 
@@ -179,15 +182,34 @@ update msg model =
             ( model, updateTableFromData model.editingData )
 
         EvalBlocklyCode code ->
-            case model.page of
-                InputProcess ->
+            case model.data of
+                Nothing ->
                     ( model, Cmd.none )
 
-                OutputProcess ->
-                    ( model, Cmd.none )
+                Just data ->
+                    case model.page of
+                        InputProcess ->
+                            let
+                                inputBlockly =
+                                    model.inputBlockly
 
-                _ ->
-                    ( model, Cmd.none )
+                                updatedBlockly =
+                                    { inputBlockly | script = code }
+                            in
+                                ( { model | inputBlockly = updatedBlockly }, evalBlockly ( code, data ) )
+
+                        OutputProcess ->
+                            let
+                                outputBlockly =
+                                    model.outputBlockly
+
+                                updatedBlockly =
+                                    { outputBlockly | script = code }
+                            in
+                                ( { model | outputBlockly = updatedBlockly }, evalBlockly ( code, data ) )
+
+                        _ ->
+                            ( model, Cmd.none )
 
 
 getLevelDir : Int -> String

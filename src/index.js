@@ -4,13 +4,14 @@ import 'semantic-ui-css/semantic.min.css';
 import * as alasql from 'alasql';
 
 import {Main} from './Main.elm';
-import {injectBlockly, removeBlockly} from './js/blockly.js';
+import {injectBlockly, evalBlockly, removeBlockly} from './js/blockly.js';
 import setupAlasql from './js/sql.js';
 import registerServiceWorker from './registerServiceWorker';
 
 var app = Main.embed(document.getElementById('root'));
 
 app.ports.injectBlockly.subscribe(injectBlockly.bind(this, app));
+app.ports.evalBlockly.subscribe(evalBlockly.bind(this, app));
 app.ports.removeBlockly.subscribe(removeBlockly);
 
 registerServiceWorker();

@@ -39,8 +39,16 @@ export function injectBlockly(app, args) {
   initBlocklyWorkspace();
 }
 
-// TODO: add event that generate the code and interprete it
-// TODO: eval code with parameter (data rows)
+export function evalBlockly(app, args) {
+  var [script, data] = args;
+
+  console.log('evalBlockly');
+  console.log('script:', script, '; data:', data);
+
+  // TODO: eval(script) with parameter (data rows)
+  // TODO: reply to elm app with result (send event)
+  app.ports.blocklyEvalResult.send([].toString());
+}
 
 export function removeBlockly() {
   if (window.workspace) {
