@@ -5,7 +5,7 @@ import App.Model exposing (BlocklyData, Model, Page(Overview), TableCell)
 import Csv exposing (Csv)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Utils exposing (getInvertedTable, onTableCellInput, fullHeight)
+import Utils exposing (getInvertedTable, fullHeight)
 
 
 processView : Model -> BlocklyData -> Csv -> Html Msg

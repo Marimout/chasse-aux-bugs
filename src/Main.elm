@@ -45,11 +45,9 @@ init =
             , outputBlockly = outputBlockly
             , outputRows = []
             , errorMessage = ""
-            , data = Nothing
-            , editingData = Nothing
-            , isEditing = False
+            , databaseData = defaultCsv
             , queryToExecute = ""
             , queryResult = ""
             }
     in
-    update LevelUp model
+        update LevelUp model

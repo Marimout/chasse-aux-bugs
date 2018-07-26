@@ -1,7 +1,7 @@
 port module App.Update exposing (update)
 
 import App.Messages exposing (Msg(..))
-import App.Model exposing (InputSet, LevelInfos, Model, Record, TableCell, Page(..))
+import App.Model exposing (InputSet, LevelInfos, Model, TableCell, Page(..))
 import Csv exposing (Csv)
 import Http exposing (..)
 import Json.Decode as Decode exposing (Decoder, field)
@@ -11,13 +11,13 @@ import Utils exposing (defaultCsv)
 port executeQuery : String -> Cmd msg
 
 
-port updateTableFromData : Maybe (List Record) -> Cmd msg
+port updateTableFromData : Csv -> Cmd msg
 
 
 port injectBlockly : ( String, String ) -> Cmd msg
 
 
-port evalBlockly : ( String, List Record ) -> Cmd msg
+port evalBlockly : ( String, Csv ) -> Cmd msg
 
 
 port removeBlockly : () -> Cmd msg
@@ -34,9 +34,6 @@ update msg model =
 
         ChangePage newPage ->
             case newPage of
-                Database ->
-                    ( { model | page = newPage, editingData = model.data }, Cmd.none )
-
                 InputProcess ->
                     ( { model | page = newPage }, injectBlockly ( "blocklyWorkspace", model.inputBlockly.toolbox ) )
 
@@ -155,19 +152,14 @@ update msg model =
                     ( { model | errorMessage = toString error }, Cmd.none )
 
         LoadDataFromDatabase newData ->
-            let
-                t =
-                    Decode.decodeValue (Decode.list decodeRecord) newData
-            in
-                case t of
-                    Ok record ->
-                        ( { model | data = Just record, editingData = Just record }, Cmd.none )
-
-                    Err error ->
-                        ( { model | data = Nothing, editingData = Nothing }, Cmd.none )
+            ( { model | databaseData = Csv.parse newData }, Cmd.none )
 
         EditDatabaseRecord tableCell ->
-            ( { model | isEditing = True, editingData = Just <| getUpdatedRecord tableCell (Maybe.withDefault [] model.editingData) }, Cmd.none )
+            let
+                newData =
+                    getUpdatedCsv tableCell model.databaseData
+            in
+                ( model, updateTableFromData newData )
 
         UpdateSqlQuery query ->
             ( { model | queryToExecute = query }, Cmd.none )
@@ -178,38 +170,30 @@ update msg model =
         UpdateQueryResult result ->
             ( { model | queryResult = result }, Cmd.none )
 
-        SaveModifiedData ->
-            ( model, updateTableFromData model.editingData )
-
         EvalBlocklyCode code ->
-            case model.data of
-                Nothing ->
+            case model.page of
+                InputProcess ->
+                    let
+                        inputBlockly =
+                            model.inputBlockly
+
+                        updatedBlockly =
+                            { inputBlockly | script = code }
+                    in
+                        ( { model | inputBlockly = updatedBlockly }, evalBlockly ( code, model.databaseData ) )
+
+                OutputProcess ->
+                    let
+                        outputBlockly =
+                            model.outputBlockly
+
+                        updatedBlockly =
+                            { outputBlockly | script = code }
+                    in
+                        ( { model | outputBlockly = updatedBlockly }, evalBlockly ( code, model.databaseData ) )
+
+                _ ->
                     ( model, Cmd.none )
-
-                Just data ->
-                    case model.page of
-                        InputProcess ->
-                            let
-                                inputBlockly =
-                                    model.inputBlockly
-
-                                updatedBlockly =
-                                    { inputBlockly | script = code }
-                            in
-                                ( { model | inputBlockly = updatedBlockly }, evalBlockly ( code, data ) )
-
-                        OutputProcess ->
-                            let
-                                outputBlockly =
-                                    model.outputBlockly
-
-                                updatedBlockly =
-                                    { outputBlockly | script = code }
-                            in
-                                ( { model | outputBlockly = updatedBlockly }, evalBlockly ( code, data ) )
-
-                        _ ->
-                            ( model, Cmd.none )
 
 
 getLevelDir : Int -> String
@@ -226,16 +210,6 @@ decodeLevelInfos =
         (field "inputRowsBySheet" (Decode.list Decode.int))
         (field "expectedOutput" Decode.string)
         (field "texts" (Decode.list Decode.string))
-
-
-decodeRecord : Decoder Record
-decodeRecord =
-    Decode.map5 Record
-        (field "id" Decode.int)
-        (field "date" Decode.string)
-        (field "libelle" Decode.string)
-        (field "montant" Decode.string)
-        (field "devise" Decode.string)
 
 
 getInputSet : Int -> Model -> InputSet
@@ -283,32 +257,16 @@ getUpdatedInputCsv tableCell inputCsv =
         { inputCsv | records = records }
 
 
-getUpdatedRecord : TableCell -> List Record -> List Record
-getUpdatedRecord tableCell inputRecord =
+getUpdatedCsv : TableCell -> Csv -> Csv
+getUpdatedCsv tableCell inputCsv =
     let
-        updateRecord : Record -> TableCell -> Record
-        updateRecord record tc =
-            case tc.fieldName of
-                "date" ->
-                    { record | date = tc.value }
+        cellMap row col val =
+            if tableCell.row == row && tableCell.col == col then
+                tableCell.value
+            else
+                val
 
-                "libelle" ->
-                    { record | libelle = tc.value }
-
-                "montant" ->
-                    { record | montant = tc.value }
-
-                "devise" ->
-                    { record | devise = tc.value }
-
-                _ ->
-                    record
+        newRecords =
+            List.indexedMap (\i r -> List.indexedMap (cellMap i) r) inputCsv.records
     in
-        inputRecord
-            |> List.indexedMap
-                (\i record ->
-                    if i == tableCell.row then
-                        updateRecord record tableCell
-                    else
-                        record
-                )
+        Csv inputCsv.headers newRecords

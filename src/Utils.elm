@@ -1,11 +1,9 @@
-module Utils exposing ((=>), defaultCsv, onTableCellInput, pair, viewIf, getStandardTable, getInvertedTable, dataToCsv, fullHeight)
+module Utils exposing ((=>), defaultCsv, pair, viewIf, getStandardTable, getInvertedTable, fullHeight)
 
 import App.Messages exposing (Msg)
-import App.Model exposing (TableCell, Model)
 import Csv exposing (Csv)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (on)
 import Json.Decode as Json
 
 
@@ -35,20 +33,6 @@ fullHeight =
 defaultCsv : Csv
 defaultCsv =
     { headers = [], records = [] }
-
-
-onTableCellInput : (TableCell -> Msg) -> Attribute Msg
-onTableCellInput tagger =
-    on "input" (Json.map tagger tableCellInputDecoder)
-
-
-tableCellInputDecoder : Json.Decoder TableCell
-tableCellInputDecoder =
-    Json.map4 TableCell
-        (Json.at [ "target", "value" ] Json.string)
-        (Json.at [ "target", "dataset", "row" ] Json.string |> jsonStringToIntDecoder)
-        (Json.at [ "target", "dataset", "col" ] Json.string |> jsonStringToIntDecoder)
-        (Json.at [ "target", "dataset", "fieldname" ] Json.string)
 
 
 jsonStringToIntDecoder : Json.Decoder String -> Json.Decoder Int
@@ -82,16 +66,3 @@ getInvertedTable csv =
 getStandardTable : Csv -> Html Msg
 getStandardTable csv =
     getTable ( "ui celled table", csv )
-
-
-dataToCsv : Model -> Csv
-dataToCsv model =
-    case model.data of
-        Just records ->
-            Csv model.inputGlobalSheet.headers
-                (records
-                    |> List.map (\record -> [ toString record.id, record.date, record.libelle, record.montant, record.devise ])
-                )
-
-        Nothing ->
-            Csv model.inputGlobalSheet.headers []

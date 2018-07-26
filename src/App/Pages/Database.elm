@@ -1,11 +1,11 @@
 module App.Pages.Database exposing (databaseView)
 
 import App.Messages exposing (..)
-import App.Model exposing (Model, Page(Overview), Record)
+import App.Model exposing (Model, Page(Overview))
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Utils exposing (onTableCellInput, viewIf)
+import Utils exposing (viewIf)
 
 
 databaseView : Model -> Html Msg
@@ -16,10 +16,6 @@ databaseView model =
             , div [ class "sixteen wide column" ]
                 [ table [ class "ui celled table" ] (tableHeader :: tableContentFromDatabase model)
                 ]
-            , viewIf (model.isEditing)
-                (div [ class "center aligned sixteen wide column" ]
-                    [ button [ class "ui button centered", onClick (SaveModifiedData) ] [ text "Save modification" ] ]
-                )
             , div [ class "sixteen wide column" ]
                 [ div [ class "ui form" ]
                     [ div [ class "field" ]
@@ -36,6 +32,7 @@ databaseView model =
 
 tableHeader : Html Msg
 tableHeader =
+    -- TODO: get from Csv headers
     thead []
         [ tr []
             [ th [] [ text "N°" ]
