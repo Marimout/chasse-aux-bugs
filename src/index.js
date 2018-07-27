@@ -36,14 +36,16 @@ app.ports.executeQuery.subscribe(function(query) {
 });
 
 function getDataAndSendToElm() {
-  var res = alasql('SELECT * FROM transaction');
+  var res = alasql('SELECT * FROM data');
 
   app.ports.loadDataFromDatabase.send(res);
 }
 
 app.ports.updateTableFromData.subscribe(function(data) {
-  alasql('TRUNCATE TABLE transaction');
-  alasql(`SELECT * INTO transaction FROM ?`, [data]);
+  console.log('data', data); // TODO: format data to Csv (headers + records)
+
+  alasql('TRUNCATE TABLE data');
+  alasql(`SELECT * INTO data FROM ?`, [data]);
 
   getDataAndSendToElm();
 });

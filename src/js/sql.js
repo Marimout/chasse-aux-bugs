@@ -6,11 +6,12 @@ export default function setupAlasql () {
   alasql('ATTACH localStorage DATABASE bank');
   alasql('USE bank');
 
-  alasql('CREATE TABLE IF NOT EXISTS transaction (id number, date string, libelle string, montant string, devise string)');
+	// TODO: no... get headers from updateDatabase if headers are differents
+  alasql('CREATE TABLE IF NOT EXISTS data (id number, date string, libelle string, montant string, devise string)');
 
   // Generate data for test
-  alasql(`IF NOT EXISTS(SELECT * FROM transaction)
-              SELECT * INTO transaction FROM ?`,
+  alasql(`IF NOT EXISTS(SELECT * FROM data)
+              SELECT * INTO data FROM ?`,
               [
                   [
                       {id:1, date: '01/02/2018', libelle: 'Amazon', montant: '65,90', devise: '€'},

@@ -47,7 +47,7 @@ export function evalBlockly(app, args) {
 
   // TODO: eval(script) with parameter (data rows)
   // TODO: reply to elm app with result (send event)
-  app.ports.blocklyEvalResult.send([].toString());
+  app.ports.blocklyEvalResult.send([[]].toString());
 }
 
 export function removeBlockly() {
