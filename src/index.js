@@ -5,7 +5,7 @@ import * as alasql from 'alasql';
 
 import {Main} from './Main.elm';
 import {injectBlockly, evalBlockly, removeBlockly} from './js/blockly.js';
-import setupAlasql from './js/sql.js';
+import {setupAlasql, getDataAndSendToElm, updateData} from './js/sql.js';
 import registerServiceWorker from './registerServiceWorker';
 
 var app = Main.embed(document.getElementById('root'));
@@ -18,34 +18,25 @@ registerServiceWorker();
 
 // Init data in the model
 setupAlasql();
-getDataAndSendToElm();
+getDataAndSendToElm(app);
 
 app.ports.executeQuery.subscribe(function(query) {
-  console.log(query);
+  console.log('query', query);
 
   alasql
     .promise(query)
-    .then(function(res) {
-      console.log(res);
-      app.ports.updateQueryExecutionResult.send(res.toString());
-      getDataAndSendToElm();
+    .then(function(result) {
+      console.log('result', result);
+      app.ports.updateQueryExecutionResult.send(result.toString());
+      getDataAndSendToElm(app);
     })
     .catch(function(err) {
-      console.log(err);
+      console.error('[ERROR]', err);
     });
 });
 
-function getDataAndSendToElm() {
-  var res = alasql('SELECT * FROM data');
-
-  app.ports.loadDataFromDatabase.send(res);
-}
-
 app.ports.updateTableFromData.subscribe(function(data) {
-  console.log('data', data); // TODO: format data to Csv (headers + records)
-
-  alasql('TRUNCATE TABLE data');
-  alasql(`SELECT * INTO data FROM ?`, [data]);
-
-  getDataAndSendToElm();
+  console.log('data', data);
+  updateData(data);
+  getDataAndSendToElm(app);
 });
