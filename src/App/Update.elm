@@ -64,6 +64,7 @@ update msg model =
                 result =
                     model.currentInputSet.inputCsv
 
+                -- TODO: result from blockly?
                 oldInputSet =
                     model.currentInputSet
 

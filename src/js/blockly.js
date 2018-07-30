@@ -45,6 +45,13 @@ export function evalBlockly(app, args) {
   console.log('evalBlockly');
   console.log('script:', script, '; data:', data);
 
+  try {
+    //eval(script)(data)
+  } catch (err) {
+    // TODO: send error to elm for player
+    console.log('[ERROR]', err);
+  }
+
   // TODO: eval(script) with parameter (data rows)
   // TODO: reply to elm app with result (send event)
   app.ports.blocklyEvalResult.send([[]].toString());

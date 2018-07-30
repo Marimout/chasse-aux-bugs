@@ -41,8 +41,6 @@ type alias TableCell =
     { value : String
     , row : Int
     , col : Int
-
-    --, fieldName : String
     }
 
 

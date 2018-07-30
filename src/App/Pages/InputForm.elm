@@ -42,7 +42,7 @@ getInputsMenu currentSet setsNb =
 
 getInputTable : Csv -> Html Msg
 getInputTable inputCsv =
-    table [ class "ui celled table" ]
+    table [ class "ui selectable celled table" ]
         [ thead []
             [ List.map (\h -> th [] [ text h ]) inputCsv.headers
                 |> tr []
